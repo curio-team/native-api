@@ -56,6 +56,7 @@ class CurrencyController extends Controller
 
     public function getCurrency($from, $to, $amount) {
         $this->generateReverseRates();
+        dd($this->currencies);
         if (!isset($currencies[$from])) {
             return response()->json(['error' => 'Invalid input', 'details' => 'From currency not found'], 404);
         }
