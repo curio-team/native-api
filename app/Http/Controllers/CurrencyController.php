@@ -47,21 +47,9 @@ class CurrencyController extends Controller
     public function generateReverseRates($base = 'EUR') {
         $currencies = $this->currencies;
         foreach ($currencies[$base] as $to => $rate) {
-            $this->currencies[$to][$base] = round(1 / $rate, 6);
-        }
-
-        // Also fill cross-currency (optional)
-        foreach ($this->currencies as $from => $targets) {
-            foreach ($targets as $to => $rate) {
-                foreach ($this->currencies as $cross => $_) {
-                    if ($cross !== $from && $cross !== $to && isset($this->currencies[$cross][$base])) {
-                        // Convert via EUR
-                        $this->currencies[$from][$cross] = round(
-                            $rate * $this->currencies[$base][$cross],
-                            6
-                        );
-                    }
-                }
+            if (!isset($this->currencies[$to])) {
+                $this->currencies[$to][$base] = round(1 / $rate, 6);
+                $this->generateReverseRates($to);
             }
         }
     }
