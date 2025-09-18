@@ -43,6 +43,25 @@ class CurrencyController extends Controller
         ],
     ];
 
+public function getCurrencies() {
+    // Generate all reverse rates to get complete currency list
+    $this->generateReverseRates();
+    
+    // Get all available currencies (from currencies)
+    $availableCurrencies = array_keys($this->currencies);
+    
+    // For each currency, get what it can convert to
+    $currencyPairs = [];
+    foreach ($this->currencies as $from => $toCurrencies) {
+        $currencyPairs[$from] = array_keys($toCurrencies);
+    }
+    
+    return response()->json([
+        'available_currencies' => $availableCurrencies,
+        'conversion_pairs' => $currencyPairs,
+        'total_currencies' => count($availableCurrencies)
+    ]);
+}
 // Generate reverse conversion for each
     public function generateReverseRates($base = 'EUR') {
         $currencies = $this->currencies;
