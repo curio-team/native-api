@@ -39,9 +39,11 @@ class QuoteController extends Controller
         ["quote" => "Change your thoughts and you change your world.", "author" => "Norman Vincent Peale"]
     ];
 
-    public function getQuote() {
+    public function getQuote()
+    {
         $randomKey = array_rand($this->quotes);
-        return response()->json($this->quotes[$randomKey]);
-    }
 
+        return response()
+            ->json($this->quotes[$randomKey]);
+    }
 }

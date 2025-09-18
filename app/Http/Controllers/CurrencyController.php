@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 
 class CurrencyController extends Controller
 {
-
     public $currencies = [
         'EUR' => [
             'USD' => 1.25,
@@ -43,28 +42,29 @@ class CurrencyController extends Controller
         ],
     ];
 
-public function getCurrencies() {
-    // Generate all reverse rates to get complete currency list
-    $this->generateReverseRates();
-    
-    // Get all available currencies (from currencies)
-    $availableCurrencies = array_keys($this->currencies);
-    
-    // For each currency, get what it can convert to
-    $currencyPairs = [];
-    foreach ($this->currencies as $from => $toCurrencies) {
-        $currencyPairs[$from] = array_keys($toCurrencies);
+    public function getCurrencies()
+    {
+        $this->generateReverseRates();
+
+        $availableCurrencies = array_keys($this->currencies);
+
+        // For each currency, get what it can convert to
+        $currencyPairs = [];
+        foreach ($this->currencies as $from => $toCurrencies) {
+            $currencyPairs[$from] = array_keys($toCurrencies);
+        }
+
+        return response()->json([
+            'available_currencies' => $availableCurrencies,
+            'conversion_pairs' => $currencyPairs,
+            'total_currencies' => count($availableCurrencies)
+        ]);
     }
-    
-    return response()->json([
-        'available_currencies' => $availableCurrencies,
-        'conversion_pairs' => $currencyPairs,
-        'total_currencies' => count($availableCurrencies)
-    ]);
-}
-// Generate reverse conversion for each
-    public function generateReverseRates($base = 'EUR') {
+
+    public function generateReverseRates($base = 'EUR')
+    {
         $currencies = $this->currencies;
+
         foreach ($currencies[$base] as $to => $rate) {
             if (!isset($this->currencies[$to])) {
                 $this->currencies[$to][$base] = round(1 / $rate, 6);
@@ -73,14 +73,33 @@ public function getCurrencies() {
         }
     }
 
-    public function getCurrency($from, $to, $amount) {
+    public function getCurrency($from, $to, $amount)
+    {
         $this->generateReverseRates();
+
         if (!isset($this->currencies[$from])) {
-            return response()->json(['error' => 'Invalid input', 'details' => 'From currency not found'], 404);
+            return response()
+                ->json([
+                    'error' => 'Invalid input',
+                    'details' => 'From currency not found'
+                ], 404);
         }
+
         if (!isset($this->currencies[$from][$to])) {
-            return response()->json(['error' => 'Invalid input', 'details' => 'To currency not found'], 404);
+            return response()
+                ->json([
+                    'error' => 'Invalid input',
+                    'details' => 'To currency not found'
+                ], 404);
         }
-        return response()->json(['from' => $from, 'to' => $to, 'amount' => $amount, 'rate' => $this->currencies[$from][$to], 'calculated' => $amount * $this->currencies[$from][$to]]);
+
+        return response()
+            ->json([
+                'from' => $from,
+                'to' => $to,
+                'amount' => $amount,
+                'rate' => $this->currencies[$from][$to],
+                'calculated' => $amount * $this->currencies[$from][$to]
+            ]);
     }
 }
