@@ -145,6 +145,12 @@ Follow these steps to get the project running locally:
    composer install
    ```
 
+   Requires the PHP SQLite extension (used by the SQLite database set up in step 5). On Debian/Ubuntu, if it's not already installed:
+
+   ```bash
+   sudo apt install php8.4-sqlite3
+   ```
+
 3. **Copy the example environment file**
 
    ```bash
@@ -157,7 +163,22 @@ Follow these steps to get the project running locally:
    php artisan key:generate
    ```
 
-5. **Start the development server**
+5. **Create the SQLite database and run migrations**
+
+   The app uses a local SQLite database purely to back Laravel's cache (used to persist the slowly-drifting Crowd/Factory state between requests) — no app data is stored in it. `DB_CONNECTION=sqlite` is already the default in `.env.example`, so you just need to create the file and migrate:
+
+   ```bash
+   touch database/database.sqlite
+   php artisan migrate
+   ```
+
+   On Windows (PowerShell), replace `touch` with:
+
+   ```powershell
+   New-Item -ItemType File -Path database/database.sqlite
+   ```
+
+6. **Start the development server**
 
    ```bash
    php artisan serve
@@ -169,7 +190,7 @@ Follow these steps to get the project running locally:
    http://127.0.0.1:8000
    ```
 
-The project ships with a small Blade landing page linking to all the endpoints below, and uses a local SQLite database purely to back Laravel's cache (used to persist the slowly-drifting Crowd/Factory state between requests) — no app data is stored in it.
+The project ships with a small Blade landing page linking to all the endpoints below.
 
 ## 🧪 Testing the API
 
