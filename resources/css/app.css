@@ -6,6 +6,50 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Lexend', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-mono: 'Google Sans Code', ui-monospace, monospace;
+
+    --color-primary: #FF6D6D;
+    --color-primary-dark: #FF5151;
+    --color-primary-light: #FF8989;
+    --color-ink: #0A0A11;
+    --color-muted: #757575;
+    --color-surface: #F3F1EE;
+    --color-surface-subtle: #f7f7f7;
+
+    --shadow-card: 0 3px 10px rgba(10, 10, 17, 0.08);
+    --shadow-card-hover: 0 10px 32px rgba(10, 10, 17, 0.12);
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-surface text-ink/80;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-white no-underline transition hover:bg-primary-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 rounded-md border border-ink/20 bg-white px-5 py-2.5 text-sm font-medium text-ink/80 no-underline transition hover:border-ink/30 hover:bg-surface-subtle focus:outline-none focus-visible:ring-2 focus-visible:ring-muted focus-visible:ring-offset-2;
+    }
+
+    .card-interactive {
+        @apply block rounded-md bg-white p-6 shadow-card transition duration-200 hover:shadow-card-hover;
+    }
+
+    .badge {
+        @apply inline-block text-[11px] font-medium uppercase tracking-wider text-muted;
+    }
+
+    .text-link {
+        @apply text-sm font-medium text-ink underline decoration-ink/25 underline-offset-4 transition hover:decoration-ink;
+    }
 }

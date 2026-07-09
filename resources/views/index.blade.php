@@ -3,115 +3,69 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Curio API Lessons</title>
-    <style>
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-            font-family: "Fira Code", monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Curio API Playground</title>
+    <link rel="icon" href="{{ asset('assets/favicon.png') }}" type="image/png">
 
-        .container {
-            text-align: center;
-            max-width: 800px;
-        }
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Google+Sans+Code&display=swap"
+          rel="stylesheet">
 
-        h1 {
-            font-size: 2.5rem;
-            color: #00ff99;
-            text-shadow: 0 0 10px #00ff99, 0 0 20px #00ff99;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        li {
-            margin: 15px 0;
-        }
-
-        a:not(.subtle) {
-            text-decoration: none;
-            color: #00bcd4;
-            font-size: 1.2rem;
-            padding: 10px 15px;
-            border: 1px solid #00bcd4;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-            display: inline-block;
-        }
-
-        a.subtle {
-            text-decoration: none;
-            color: #777;
-            font-size: 0.9rem;
-            padding: 5px 10px;
-        }
-
-        a:hover {
-            background-color: #00bcd4;
-            color: #121212;
-            box-shadow: 0 0 15px #00bcd4, 0 0 30px #00bcd4;
-            transform: scale(1.05);
-        }
-
-        footer {
-            margin-top: 40px;
-            font-size: 0.9rem;
-            color: #777;
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body>
-    <div class="container">
-        <h1 id="title">⚡ Curio API Playground ⚡</h1>
-        <ul>
-            <li><a href="{{ url('/weer/NL/Amsterdam') }}"
-                   target="_blank">🌦 Weather (NL/Amsterdam)</a></li>
-            <li><a href="{{ url('/currencyconverter/EUR/USD/100') }}"
-                   target="_blank">💱 Currency Converter (EUR → USD)</a></li>
-            <li><a href="{{ url('/currencyconverter') }}"
-                   target="_blank">💹 List Currencies</a></li>
-            <li><a href="{{ url('/quote') }}"
-                   target="_blank">💬 Random Quote</a></li>
+<body class="min-h-screen bg-surface font-sans text-ink/80">
+    <div class="mx-auto flex min-h-screen max-w-3xl flex-col items-center justify-center px-6 py-16 text-center">
+        <img src="{{ asset('assets/logo.png') }}"
+             alt="Curio"
+             class="mb-6 h-auto w-24 max-w-full">
+
+        <h1 class="text-3xl font-semibold text-ink">Curio API Playground</h1>
+        <p class="mt-2 text-sm text-muted">A handful of small endpoints for testing and learning.</p>
+
+        <ul class="mt-10 grid w-full gap-4 sm:grid-cols-2">
+            <li>
+                <a href="{{ url('/weer/NL/Amsterdam') }}"
+                   target="_blank"
+                   class="card-interactive no-underline!">
+                    <span class="badge">Weather</span>
+                    <p class="mt-1 font-medium text-ink">🌦 Weather (NL/Amsterdam)</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/currencyconverter/EUR/USD/100') }}"
+                   target="_blank"
+                   class="card-interactive no-underline!">
+                    <span class="badge">Currency</span>
+                    <p class="mt-1 font-medium text-ink">💱 Convert EUR &rarr; USD</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/currencyconverter') }}"
+                   target="_blank"
+                   class="card-interactive no-underline!">
+                    <span class="badge">Currency</span>
+                    <p class="mt-1 font-medium text-ink">💹 List Currencies</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/quote') }}"
+                   target="_blank"
+                   class="card-interactive no-underline!">
+                    <span class="badge">Quotes</span>
+                    <p class="mt-1 font-medium text-ink">💬 Random Quote</p>
+                </a>
+            </li>
         </ul>
-        <footer>
-            Open-source @ <a href="https://github.com/curio-team/native-api"
-               class="subtle"
-               target="_blank">curio-team/native-api</a>
+
+        <footer class="mt-12 text-sm text-muted">
+            Open-source @
+            <a href="https://github.com/curio-team/native-api"
+               target="_blank"
+               class="text-link">curio-team/native-api</a>
         </footer>
     </div>
-
-    <script>
-        // Animate the title with a typing effect
-        const title = document.getElementById("title");
-        const text = title.innerHTML;
-        let i = 0;
-        title.innerHTML = "";
-
-        function typeWriter() {
-            if (i < text.length) {
-                // Add characters one by one, preserving spaces as &nbsp;
-                if (text.charAt(i) === " ") {
-                    title.innerHTML += "&nbsp;";
-                } else {
-                    title.innerHTML += text.charAt(i);
-                }
-                i++;
-                setTimeout(typeWriter, 80);
-            }
-        }
-        typeWriter();
-    </script>
 </body>
 
 </html>
