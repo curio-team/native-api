@@ -74,14 +74,6 @@ class FactoryController extends Controller
                 ], 404);
         }
 
-        if ($machine === 'conveyor-1' && $this->isConveyorOneDown()) {
-            return response()
-                ->json([
-                    'error' => 'Service unavailable',
-                    'details' => 'conveyor-1 sensor bus timed out',
-                ], 503);
-        }
-
         $profile = $this->machines[$machine];
 
         $status = $this->currentStatus($machine);
@@ -140,16 +132,12 @@ class FactoryController extends Controller
             ]);
     }
 
-    private function isConveyorOneDown(): bool
-    {
-        // Fails for the first 3 seconds of every 15-second window, so
-        // consumers see at least two failures every 30 seconds regardless
-        // of poll timing.
-        return (time() % 15) < 3;
-    }
-
     private function currentStatus(string $machine): string
     {
+        if ($machine === 'conveyor-1') {
+            return $this->conveyorOneStatus();
+        }
+
         $cacheKey = 'factory:status:'.$machine;
         $state = Cache::get($cacheKey);
         $nowTimestamp = time();
@@ -182,6 +170,26 @@ class FactoryController extends Controller
             'status' => $status,
             'until' => $nowTimestamp + $durationSeconds,
         ], now()->addHours(6));
+
+        return $status;
+    }
+
+    private function conveyorOneStatus(): string
+    {
+        // Deliberately unreliable machine: reports 'error' for the first 3
+        // seconds of every 15-second window, guaranteeing at least two
+        // error readings every 30 seconds regardless of poll timing.
+        $cacheKey = 'factory:status:conveyor-1';
+        $errorKey = 'factory:errors:conveyor-1';
+        $previousStatus = Cache::get($cacheKey);
+
+        $status = (time() % 15) < 3 ? 'error' : 'running';
+
+        if ($status === 'error' && $previousStatus !== 'error') {
+            Cache::put($errorKey, (int) Cache::get($errorKey, 0) + 1, now()->addHours(6));
+        }
+
+        Cache::put($cacheKey, $status, now()->addHours(6));
 
         return $status;
     }

@@ -106,7 +106,7 @@ The project includes the following example endpoints:
 
   * Returns simulated sensor readings for a machine: temperature, vibration, belt speed, cumulative units produced, error count and current status (`running`, `idle` or `error`).
   * Status persists for a stretch of time instead of flickering every request, and sensor values drift gradually rather than jumping — `units_produced` only climbs while the machine is `running`.
-  * ⚠️ **`conveyor-1` is intentionally unreliable.** It returns `503 Service Unavailable` for the first 3 seconds of every 15-second window (i.e. it is down roughly 20% of the time), guaranteeing **at least two failures every 30 seconds** no matter when you poll it. This is on purpose — it's there so students have to practice handling failed requests (retries, error states, etc.) instead of assuming every call succeeds. Every other machine (`press-2`, `painter-3`, `packer-4`, `welder-5`) behaves normally.
+  * ⚠️ **`conveyor-1` is intentionally unreliable.** The request itself still succeeds (`200 OK`), but `status` reports `"error"` for the first 3 seconds of every 15-second window (roughly 20% of the time), guaranteeing **at least two `"error"` readings every 30 seconds** no matter when you poll it. `error_count` increments each time it enters an error window. This is on purpose — it's there so students have to practice handling error *states* in the payload (not just failed requests) instead of assuming `status` is always healthy. Every other machine (`press-2`, `painter-3`, `packer-4`, `welder-5`) behaves normally.
   * Example:
 
     ```http
