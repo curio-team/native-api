@@ -74,6 +74,14 @@ class FactoryController extends Controller
                 ], 404);
         }
 
+        if ($machine === 'conveyor-1' && $this->isConveyorOneDown()) {
+            return response()
+                ->json([
+                    'error' => 'Service unavailable',
+                    'details' => 'conveyor-1 sensor bus timed out',
+                ], 503);
+        }
+
         $profile = $this->machines[$machine];
 
         $status = $this->currentStatus($machine);
@@ -130,6 +138,14 @@ class FactoryController extends Controller
                 'error_count' => $errorCount,
                 'updated_at' => now()->toIso8601String(),
             ]);
+    }
+
+    private function isConveyorOneDown(): bool
+    {
+        // Fails for the first 3 seconds of every 15-second window, so
+        // consumers see at least two failures every 30 seconds regardless
+        // of poll timing.
+        return (time() % 15) < 3;
     }
 
     private function currentStatus(string $machine): string
