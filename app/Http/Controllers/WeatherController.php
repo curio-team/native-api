@@ -2,51 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\TimeSeededRandom;
 use Illuminate\Http\Request;
 
 class WeatherController extends Controller
 {
     public $countries = [
         'NL',
-    ];
-
-    public $cities = [
-        'NL' => [
-            'Amsterdam',
-            'Rotterdam',
-            'Den Haag',
-            'Utrecht',
-            'Eindhoven',
-            'Tilburg',
-            'Groningen',
-            'Breda',
-            'Apeldoorn',
-            'Nijmegen',
-            'Enschede',
-            'Leeuwarden',
-            'Zwolle',
-            'Arnhem',
-            'Maastricht',
-            'Amersfoort',
-            'Haarlem',
-            'Leiden',
-            'Delft',
-            'Zwijndrecht',
-            'Harderwijk',
-            'Almere',
-            'Heerlen',
-            'Venlo',
-            'Hilversum',
-            'Zaanstad',
-            'Roosendaal',
-            'Dordrecht',
-            'Gouda',
-            'Zoetermeer',
-            'Emmen',
-            'Veenendaal',
-            'Weesp',
-            'Helmond'
-        ]
     ];
 
     public function getWeather($country, $city)
@@ -59,20 +21,25 @@ class WeatherController extends Controller
                 ], 404);
         }
 
-        if (!in_array($city, $this->cities[$country])) {
+        if (!preg_match('/^[a-zA-Z\s\-]{2,50}$/', $city)) {
             return response()
                 ->json([
                     'error' => 'Invalid input',
-                    'details' => 'City not found'
-                ], 404);
+                    'details' => 'City must be 2-50 characters, letters, spaces and dashes only'
+                ], 422);
         }
+
+        $seasonalMid = TimeSeededRandom::smooth('weather:season:'.$city, 365 * 24 * 3600, 4, 20);
+        $temp = TimeSeededRandom::smooth('weather:temp:'.$city, 24 * 3600, $seasonalMid - 8, $seasonalMid + 8);
+
+        $rainChance = TimeSeededRandom::smooth('weather:rain:'.$city, 6 * 3600, 0, 100);
 
         return response()
             ->json([
                 'country' => $country,
                 'city' => $city,
-                'Temp' => rand(-10, 35),
-                'RainChance' => rand(0, 100)
+                'Temp' => round($temp),
+                'RainChance' => round($rainChance)
             ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\TimeSeededRandom;
 use Illuminate\Http\Request;
 
 class CurrencyController extends Controller
@@ -93,13 +94,16 @@ class CurrencyController extends Controller
                 ], 404);
         }
 
+        $drift = TimeSeededRandom::smooth('fx:'.$from.':'.$to, 3 * 3600, 0.97, 1.03);
+        $rate = round($this->currencies[$from][$to] * $drift, 6);
+
         return response()
             ->json([
                 'from' => $from,
                 'to' => $to,
                 'amount' => $amount,
-                'rate' => $this->currencies[$from][$to],
-                'calculated' => $amount * $this->currencies[$from][$to]
+                'rate' => $rate,
+                'calculated' => round($amount * $rate, 2)
             ]);
     }
 }

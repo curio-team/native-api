@@ -17,3 +17,12 @@ Route::get('/currencyconverter', [App\Http\Controllers\CurrencyController::class
 
 Route::get('/quote', [App\Http\Controllers\QuoteController::class, 'getQuote'])
     ->name('quote.index');
+
+Route::get('/crowd/{location}', [App\Http\Controllers\CrowdController::class, 'getCrowd'])
+    ->name('crowd.index');
+
+Route::get('/factory/machines', [App\Http\Controllers\FactoryController::class, 'getMachines'])
+    ->name('factory.machines');
+
+Route::get('/factory/{machine}', [App\Http\Controllers\FactoryController::class, 'getSensorData'])
+    ->name('factory.index');

@@ -57,6 +57,30 @@
                     <p class="mt-1 font-medium text-ink">💬 Random Quote</p>
                 </a>
             </li>
+            <li>
+                <a href="{{ url('/crowd/city-museum') }}"
+                   target="_blank"
+                   class="card-interactive no-underline!">
+                    <span class="badge">Crowd</span>
+                    <p class="mt-1 font-medium text-ink">👥 Crowd (city-museum)</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/factory/machines') }}"
+                   target="_blank"
+                   class="card-interactive no-underline!">
+                    <span class="badge">Factory</span>
+                    <p class="mt-1 font-medium text-ink">🏭 List Machines</p>
+                </a>
+            </li>
+            <li>
+                <a href="{{ url('/factory/conveyor-1') }}"
+                   target="_blank"
+                   class="card-interactive no-underline!">
+                    <span class="badge">Factory</span>
+                    <p class="mt-1 font-medium text-ink">⚙️ Sensor Data (conveyor-1)</p>
+                </a>
+            </li>
         </ul>
 
         <footer class="mt-12 text-sm text-muted">
